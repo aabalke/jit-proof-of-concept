@@ -1,10 +1,16 @@
-# Go Jit Proof of Concept
+# Go Jit Compiler Proof of Concept
 
-This is a basic jit implimentation in golang, with the ability to call go functions from within the jit assembly code.
-This is based on [Calling Go funcs from asm and JITed code](https://www.quasilyte.dev/blog/post/call-go-from-jit/) by Iskander Sharipov, however Sharipov's version only works on Go version <1.16. This version works on Go version 1.17+ by handling the new ABI Internal -> ABI0 changes.
+A proof of concept JIT Compiler in Go meant to be supplemental to [this article](https://aaronbalke.com/posts/gojit/).
+The main purpose is to illustrate the problem of calling Go functions from within JIT blocks.
 
-An indepth article is available [here](https://aaronbalke.com/posts/calling-go-functions-from-jit-code/).
+This works on x86/amd64 instructions set systems, is made for Go version 1.26; however, it should work on versions >= 1.17.
 
-## Other Notes
-- Has Mmap functions for building in linux and windows
+This proof of concept has been developed into the [aabalke/gojit](https://github.com/aabalke/gojit) compiler.
+The main usage is inside the [aabalke/guac](https://github.com/aabalke/guac) emulator, a GB, GBA, and NDS emulator.
+
+Based on [Calling Go funcs from asm and JITed code](https://www.quasilyte.dev/blog/post/call-go-from-jit/) by Iskander Sharipov.
+
+## Major changes
+- Works with modern ABI. ABI0 and ABIInternal wrappers handled.
+- Has Mmap functions for building in Linux and Windows
 - Has offset calculated at runtime, since OS and Go version will cause the offset to move slightly based on the instructions used.

@@ -1,5 +1,6 @@
 #include "funcdata.h"
 
+//jit_amd64.s
 TEXT ·callJIT(SB), 0, $8-8
     NO_LOCAL_POINTERS
     MOVQ code+0(FP), AX
@@ -7,6 +8,7 @@ TEXT ·callJIT(SB), 0, $8-8
 gocall:
     CALL CX
     JMP (SP)
+
 
 // Helper: func callJITImplAddr() uintptr
 // Returns the address of the ABI0 implementation symbol.

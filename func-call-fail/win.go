@@ -2,15 +2,14 @@
 
 package main
 
-
 import (
-    "syscall"
-    "fmt"
-    "unsafe"
+	"fmt"
+	"syscall"
+	"unsafe"
 )
 
 var (
-	kernel32        = syscall.NewLazyDLL("kernel32.dll")
+	kernel32         = syscall.NewLazyDLL("kernel32.dll")
 	procVirtualAlloc = kernel32.NewProc("VirtualAlloc")
 	procVirtualFree  = kernel32.NewProc("VirtualFree")
 )
@@ -35,7 +34,7 @@ func mmapExecutable(length int) ([]byte, error) {
 	}
 
 	// Build a Go slice backed by the allocated memory
-    slice := unsafe.Slice((*byte)(unsafe.Pointer(ptr)), length)
+	slice := unsafe.Slice((*byte)(unsafe.Pointer(ptr)), length)
 	return slice, nil
 }
 
