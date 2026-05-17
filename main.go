@@ -29,11 +29,12 @@ func main() {
 		panic(err)
 	}
 
+	asm.Mov64(R08, cPtr)
+	asm.Movz(R09, 0xDEAD, 0, false)
+	asm.Movk(R09, 0xBEEF, 1, false)
+
 	asm.CallFunc(goFunction)
-	asm.Mov64(R00, cPtr)
-	asm.Movz(R01, 0xDEAD, 0, false)
-	asm.Movk(R01, 0xBEEF, 1, false)
-	asm.StrImm(R01, R00, 0, SIZE_DWRD, false, true)
+	asm.StrImm(R09, R08, 0, SIZE_DWRD, false, true)
 
 	asm.Exit()
 
@@ -49,16 +50,16 @@ func (a *Assembler) CallFunc(f any) {
 	funcPtr := uint64(funcAddr(f))
 	offset := 4 * 2
 
-	a.Mov64(R02, funcPtr)
-	a.Mov64(R03, callerPtr)
-	a.addInst(getADR(R04, int32(offset)))
-	a.addInst(getBR(R03))
+	a.Mov64(R13, funcPtr)
+	a.Mov64(R14, callerPtr)
+	a.addInst(getADR(R15, int32(offset)))
+	a.addInst(getBR(R14))
 }
 
 func (a *Assembler) Exit() {
 
 	// this amount needs to match the amount in callJIT asm text header
-	a.ADDImm(RSP, RSP, (32 + 16), false, false, true)
+	a.ADDImm(RSP, RSP, (80 + 16), false, false, true)
 	a.Ret()
 
 	if err := a.Error(); err != nil {

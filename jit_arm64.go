@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"unsafe"
 )
 
@@ -19,34 +18,5 @@ func getTaggedLabelAddr(tagIdx uint8) uintptr {
 	tagBytes := []uint8{tagIdx, 0xBE, 0xAD, 0xDE}
 	offset := bytes.Index(bts, tagBytes)
 	offset += 4 // past offset
-	return impl + uintptr(offset)
-}
-
-func getCallAddr() uintptr {
-
-	impl := callJITImplAddr()
-
-	return impl + uintptr(8 * 4) + 4
-
-
-	// most offsets seem to be between 30 - 40
-	insts := unsafe.Slice((*uint32)(unsafe.Pointer(impl)), 0x60)
-
-	label := getBLR(R02)
-	//label := getBR(RSP)
-
-	// get index of CALL CX (BLR R10)
-
-	i := 0
-	for ; i < len(insts); i++ {
-		if insts[i] == label {
-			break
-		}
-	}
-
-	offset := i * 4
-
-	fmt.Printf("Label %08X, Offset %04d\n", label, offset)
-
 	return impl + uintptr(offset)
 }
